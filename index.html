@@ -98,6 +98,7 @@
   }
   .flow-row .from, .flow-row .to { font-weight: 700; line-height: 1.5; }
   .flow-row .to { text-align: right; }
+  .fineprint { margin: 18px 4px 0; font-size: .72rem; line-height: 1.6; color: var(--sub); }
   .flow-row small { display: block; font-weight: 400; color: var(--sub); font-size: .8rem; line-height: 1.55; }
   .flow-row .arrow { color: var(--sub); font-size: 1.2rem; }
   .flow-row.stay { grid-template-columns: 1fr; border-color: var(--ok); background: var(--ok-soft); }
@@ -163,7 +164,7 @@
 
     <div class="section-title" id="privacy">
       <h2>プライバシーポリシー</h2>
-      <p>最終更新日: 2026年11月16日</p>
+      <p>最終更新日: 2026年11月18日</p>
     </div>
 
     <section class="card">
@@ -201,7 +202,7 @@
       <div class="flow">
         <div class="flow-row stay">
           <div class="from">端末の中にとどまるもの
-            <small>ログイン情報 / 課題 / 時間割 / 学生プロフィール / 位置情報</small>
+            <small>ログイン情報 / 課題 / 時間割・教室 / 学生プロフィール / 位置情報</small>
           </div>
         </div>
         <div class="flow-row">
@@ -253,6 +254,15 @@
         <li>広告・お知らせの表示テストのための、端末ごとのランダムな識別子</li>
       </ul>
       <p>これらの情報は、それ単体で個人を特定するものではなく、他のサービスへの提供・販売も一切行いません。</p>
+    </section>
+
+    <section class="card">
+      <h3>
+        <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/></svg></span>
+        ウィジェット・Safari機能拡張について
+      </h3>
+      <p>ホーム画面・ロック画面のウィジェットに出す時間割と課題、およびSafari機能拡張がmanabaのページから読み取った未提出の課題は、端末の中の、つくはぶとウィジェット・機能拡張の間だけで共有する保存領域(App Group)を通して受け渡します。Safari機能拡張は、利用者がSafariで開いたmanabaのページだけを読み取り、その内容を開発者や第三者のサーバーへ送ることはありません。</p>
+      <p>TWINSから取り込んだ授業の教室は、端末の中にだけ保存します。教室の表示は、設定の「授業に教室を表示」でオフにできます(ウィジェットと授業の詳細には表示されます)。</p>
     </section>
 
     <section class="card">
@@ -320,6 +330,16 @@
               <td>開発者のサーバー(Supabase)</td>
             </tr>
             <tr>
+              <td>ウィジェット・Safari機能拡張に渡す時間割・課題</td>
+              <td><span class="tag stay">端末内</span></td>
+              <td>端末の中の共有の保存領域(App Group)。外部へは送信しません</td>
+            </tr>
+            <tr>
+              <td>配布物のQRコードから開いたWebページの、開いた日時・どのQRコードか・端末の種類(iPhone/Android/その他)</td>
+              <td><span class="tag out">匿名で送信</span></td>
+              <td>開発者のサーバー(Supabase)。アプリの外のWebページ(QRコードの行き先)での記録です</td>
+            </tr>
+            <tr>
               <td>IPアドレス・表示している地図の範囲</td>
               <td><span class="tag out">配信元に伝わる</span></td>
               <td>地図の配信元(Apple / OpenFreeMap / unpkg.com)。AndroidのPDF表示ではjsDelivr(IPアドレスのみ)</td>
@@ -337,6 +357,7 @@
       <p>本ポリシーに関するご質問は、上記のメールアドレスまでご連絡ください。</p>
       <a class="mail" href="mailto:hiro38101029@gmail.com">hiro38101029@gmail.com</a>
     </section>
+    <p class="fineprint">セキュリティのため、筑波大学の統一認証のパスワードを定期的に変更することをおすすめします。以前のバージョンのつくはぶでログイン情報を保存していた方も、この機会にパスワードの変更をご検討ください(変更は統一認証システムのサイトで行えます)。</p>
   </main>
 
   <footer>&copy; 2026 hir000o-hub</footer>
