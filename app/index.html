@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>つくはぶをダウンロード</title>
+<!--
+  チラシなどのQRコードの行き先(2026-11-18)。開いた端末で振り分ける:
+    iPhone・iPad → App Store / Android → Google Play / それ以外 → 2つのボタン
+  開いた時に、読まれた回数だけSupabaseに記録する(qr_scans。いつ・どのQRか・iPhoneかAndroidか
+  だけで、個人の情報は送らない)。記録が失敗しても、届かなくても、行き先へは必ず進む。
+  ?s=f1 のように、どのQRかを付けられる(英小文字・数字・-_ の32文字まで)。
+  このURLはチラシに印刷するので、場所を変えないこと。行き先はここを直せば変えられる。
+-->
+<style>
+  :root { --bg:#f5f7fb; --card:#ffffff; --text:#1c2330; --sub:#5b6577; --brand:#208AEF; --brand-dark:#0B579D; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px 16px; }
+  .card { background:var(--card); border-radius:20px; padding:28px 22px; max-width:400px; width:100%;
+    text-align:center; box-shadow:0 4px 20px rgba(11,87,157,.08); }
+  h1 { margin:0 0 4px; font-size:30px; color:var(--brand); }
+  p { margin:0 0 20px; color:var(--sub); font-size:14px; line-height:1.6; }
+  a.btn { display:block; margin:10px 0; padding:14px; border-radius:12px; background:var(--brand); color:#fff;
+    text-decoration:none; font-weight:700; font-size:16px; }
+  a.btn.alt { background:var(--brand-dark); }
+  .note { margin-top:18px; font-size:11.5px; color:var(--sub); }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>つくはぶ</h1>
+  <p id="msg">筑波大生のための 課題・時間割アプリ</p>
+  <a class="btn" id="ios" href="https://apps.apple.com/jp/app/id6804125034">App Store(iPhone・iPad)</a>
+  <a class="btn alt" id="android" href="https://play.google.com/store/apps/details?id=com.tsukubahub.app">Google Play(Android)</a>
+  <div class="note">大学の公式アプリではありません。</div>
+</div>
+<script>
+(function () {
+  var IOS_URL = 'https://apps.apple.com/jp/app/id6804125034';
+  var ANDROID_URL = 'https://play.google.com/store/apps/details?id=com.tsukubahub.app';
+  var SUPABASE_URL = 'https://vgttxnbvepcuceolvoym.supabase.co';
+  // アプリと同じ公開用のキー(RLSで、決まった関数しか呼べない)。
+  var KEY = 'sb_publishable_hR_P83GLq6mwXnOgVH5RWA_GG9iVRiN';
+
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android/.test(ua);
+  var platform = isIOS ? 'ios' : isAndroid ? 'android' : 'other';
+
+  var source = 'qr';
+  try {
+    var s = new URLSearchParams(location.search).get('s');
+    if (s && /^[a-z0-9_-]{1,32}$/.test(s)) source = s;
+  } catch (e) {}
+
+  var target = isIOS ? IOS_URL : isAndroid ? ANDROID_URL : null;
+  var moved = false;
+  function go() {
+    if (moved || !target) return;
+    moved = true;
+    location.replace(target);
+  }
+
+  // 同じ人が戻ってきて読み込み直した時は数えない(この画面を開いている間だけ覚える)。
+  var counted = false;
+  try { counted = sessionStorage.getItem('counted') === '1'; } catch (e) {}
+
+  if (!counted) {
+    try { sessionStorage.setItem('counted', '1'); } catch (e) {}
+    try {
+      fetch(SUPABASE_URL + '/rest/v1/rpc/record_qr_scan', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json', apikey: KEY, Authorization: 'Bearer ' + KEY },
+        body: JSON.stringify({ p_source: source, p_platform: platform })
+      }).then(go, go);
+    } catch (e) {}
+  }
+
+  if (target) {
+    document.getElementById('msg').textContent = 'ストアを開いています…';
+    // 記録の返事を待つのは長くても0.8秒まで。
+    setTimeout(go, counted ? 0 : 800);
+  }
+})();
+</script>
+</body>
+</html>
